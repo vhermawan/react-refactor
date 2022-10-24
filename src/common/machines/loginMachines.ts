@@ -1,19 +1,35 @@
-import { createMachine } from 'xstate';
+import { assign, createMachine } from 'xstate';
+import { API } from '../../common/api/api';
+import toast from 'react-hot-toast/headless';
 export const loginMachine = 
-/** @xstate-layout N4IgpgJg5mDOIC5QBsD2UCWA7AtAWwEMBjAC2zADoMJkwBiAYQBkBJBgaQGUBVAIQFkWAFV7chQgPIA5ANoAGALqJQAB1SwMAFwyosykAA9EARgAsAZgpyATADZTp63LkAOawE5bAdgCsAGhAAT0QPawp3a0ifaJ9zdzNrAF9EgLRMXEJScgo0AghsKDoIXUpsADdUAGtKNOx8YjIsGtQ8goRy1CICbV15BT79NQ0evSRDRB8XSy93cy9rFwtHc1NjAOCEa2MwuxcvMyX58ySUkFqMhuzc-KxCsAAne9R7ihVkboAzZ7wc9DrMxrNVq3dpYCpdEZ9AZjIZaHSjUBGBDGLy2CjbHxyUw+dyOOTbczrRBTdE+Wx2OReGymFyxczJVJ-C5ZJoUD4EDDIACu93oACUAKJCPkATWhqnUcN0+iRZjRcnM21sxxc+PcXhcRORbgo5hcGKp6pR9mSpywqAgcH053qLNKNDAg0lIxliAsFAccx881sOO9tNsWuskw9K3McQV5gVytMDLOTNtgN+wKgTuG8NdCD1xg9GJRNMVLnVhKCIW2uuMewWKympls7jjNoB2VgXKIRDg8BhzozYyR+ss7jJWy82Os5nsgdLm2MOf11lMqPrs1Mzljpybl1Z7M5PMd3fT0r7busWvzFFik7kEWVNl9jYTzaaaalCPGCBwU42OB8FFV81VFEPEmYwfGMU1EiAA */
+/** @xstate-layout N4IgpgJg5mDOIC5QBsD2UCWA7AtAWwEMBjAC2zADoMJkwBiASQDkAFAVQBUB9AUQFkAggwAyAbQAMAXUSgADqlgYALhlRYZIAB6IAbOIoB2HQA4DAVgMAWAEzjxARmtnrAGhABPRNes6K1gJxmxtb2xg4GxpZmlgC+MW5omLiEpORUNPTM7NwsAgDKeQDqAPIASgAiEtJIIPKKKmoa2gghAMx+FsHWBq09OtEGbp4IOvYUOv7G-q3+5satZvb2BnEJ6Nj4xGRYlNS0dADCwgwHANJceWwAQnwM3FecHMVMVRp1yqrqNc3WrdYUrXEOm6jja-UsxiGiHs-jGYUBgWslnE-nExn6qxAiQ2KW2lDQBAg2CgdAgal2WAAbqgANb49bJLZpAlErBQBDYalEAgNLBVV41d68pqICK+ebmZzWSKtHQTKEIebjRwQgzeYz2GwGeyY7GM1I7Cgs4l0MAAJzNqDNFFkyB5ADMrXgjQzNgb6YTiRyqahubz+VI3goPo1vqL0RQJWYpTK5f4FaF-hLLP4JnLNTo-rrXbi0vaCBhkABXM30Uo8DilACaArkweFYYQQX0KIhKYM-ksOgh8Y8iFasoooQsnR6C0srTi8RAWFQEDgGj1brx6VoQfqnxFiuMALM03R00sBhR9jMCoH+mcaNap5mEQ12aSy+ZqE9bPXIa+oGaQUsFCimYOMYpgomiCYmEO-hQaiUQdmi8yPjiTKGrARZEEQcDwIK9abo29jhBQdh2AYHYag4SIKkqp7Akep7iK0xgWDq05Lrmhr5oWJZgB+DbftCBFEeIJGTPhKrntKhG2MEQKRE4lgToh+p4jxuF8QgjiGCY5hWLY5HOAqODdP+Fh-LpgJmHoNhTjEQA */
 createMachine (
   {
   context: {
     userData: {},
+    email: undefined,
+    password: undefined,
+    isEmailError: false,
+    isPasswordError: false,
   },
   id: "login-machine",
   initial: "idle",
   states: {
     idle: {
       on: {
-        CLICKSUBMITBUTTON: {
+        INPUT_EMAIL: {
+          target: "idle",
+          actions: "setEmail",
+          internal: false,
+        },
+        INPUT_PASSWORD: {
+          target: "idle",
+          actions: ["setPassword", "verifyEmail"],
+          internal: false,
+        },
+        CLICK_SUBMIT_BUTTON: {
           target: "loading",
-          actions: "submitForm",
+          cond: "isFormValid",
         },
       },
     },
@@ -28,7 +44,7 @@ createMachine (
         ],
         onError: [
           {
-            target: "failure",
+            target: "idle",
             actions: "showToastError",
           },
         ],
@@ -38,25 +54,46 @@ createMachine (
       entry: "notifySuccess",
       type: "final",
     },
-    failure: {
-      on: {
-        RETRY: {
-          target: "loading",
-        },
-      },
-    },
   },
 },{
-  actions:{
+  actions:{ /*to set state*/
+    verifyEmail: assign({
+      isEmailError(context: any){
+        if(context.email){
+          let isEmailError =  (/^\S+@\S+$/.test(context.email as string))
+          return !isEmailError;
+        }else{
+          return context.isEmailError;
+        }
+      }
+    }),
+    setEmail: assign({
+      email: (_, event: any) => event.value,
+    }),
+    setPassword: assign({
+      password: (_, event: any) => event.value
+    }),
     redirectDashboardPage:(context, eventData) => {
       console.log('context', context, 'eventData', eventData);
     },
-    showToastError:(context, eventData) => {
-      console.log('context', context, 'eventData', eventData);
+    showToastError:(_, eventData) => {
+      console.log('eventData', eventData.data);
+      // toast.error("This didn't work.")
+      alert("error")
     },
-    submitForm:(context, eventData) => {
-      console.log('context', context, 'eventData', eventData);
+  },
+  services:{ /*to make fetch data return in promise*/
+    submitForm: async (context, eventData) => {
+      return await API.post("/auth/login",{
+        email: context.email,
+        password: context.password,
+      })
     },
+  },
+  guards:{ /*to make condition*/
+    isFormValid: (context, event) => {
+      return true
+    }
   }
 }
 )

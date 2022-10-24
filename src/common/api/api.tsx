@@ -1,8 +1,6 @@
 import axios, { RawAxiosRequestHeaders } from 'axios';
 import { API_URL } from './initProperties';
 
-interface headersI {}
-
 export const API = {
   post : async function (endPoint: string, input: Object) {        
     let headers: RawAxiosRequestHeaders = {};
@@ -11,11 +9,12 @@ export const API = {
     if(token !== null)
       headers.Authorization = `Bearer ${token}`;
 
-    try {
-      const response = await axios.post(API_URL + endPoint, input, { headers: headers });
+    return await axios.post(API_URL + endPoint, input, { headers: headers })
+    .then(response => {
       return response;
-    } catch (error) {
-      return error;
-    }
+    }).catch(error => {
+      throw error.response;
+    });
+    
 },
 }

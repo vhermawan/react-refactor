@@ -1,56 +1,30 @@
-import { API } from '../../common/api/api';
+
 import { TextInput, Button, Group, Box, PasswordInput, Center } from '@mantine/core';
-import { useForm } from '@mantine/form';
 import { useMachine } from '@xstate/react';
 import { loginMachine } from '../../common/machines/loginMachines';
-import React from 'react';
-interface IValues {
-  email: string;
-  password: string;
-}
 
 export default function Login() {
-
-  const form = useForm({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-
-    validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-    },
-  });
-
-  const [stateMachine, sendStateMachine] = useMachine(loginMachine, {
-    actions:{
-      submitForm: (ctx, event) => {
-        
-      }
-    }
-    // services: {
-    //   postLogin: () => {
-    //     return fetchCustomerInvitation(params);
-    //   },
-    // },
-  });
-
-  const submitForm = async (values: IValues) => {
-    const userData = await API.post("/auth/login",values)
-    console.log('values', userData)
-    // sendStateMachine.send
-  }
-
+  const [_, dispatch] = useMachine(loginMachine);
   return (
     <>
       <Center sx={{ width: '700px', minHeight: '100vh', padding:'20px' }}  px="xl" mx="auto" my="auto">
         <Box>
-          <form onSubmit={form.onSubmit(submitForm)}>
+          <form onSubmit={(e)=>{
+            e.preventDefault();
+            dispatch("CLICK_SUBMIT_BUTTON")
+          }}>
             <TextInput
               withAsterisk
               label="Email"
               placeholder="your@email.com"
-              {...form.getInputProps('email')}
+              type="email"
+              onChange={(e)=> {
+                dispatch({
+                  type: "INPUT_EMAIL",
+                  value: e.target.value,
+                })
+              }}
+              required
             />
 
             <PasswordInput
@@ -60,7 +34,12 @@ export default function Login() {
               description="Password must include at least one letter, number and special character"
               aria-label="Your password"
               withAsterisk
-              {...form.getInputProps('password')}
+              onChange={(e)=> {
+                dispatch({
+                  type: "INPUT_PASSWORD",
+                  value: e.target.value,
+                })
+              }}
             />
 
             <Group position="right" mt="md">
