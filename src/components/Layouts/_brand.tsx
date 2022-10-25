@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Group, ActionIcon, Box, ColorScheme  } from '@mantine/core';
 import { IconSun, IconMoonStars } from '@tabler/icons';
 import { Logo } from './_logo';

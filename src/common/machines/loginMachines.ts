@@ -1,5 +1,5 @@
 import { assign, createMachine } from 'xstate';
-import { API } from '../../common/api/api';
+import { API } from '@common/api/api';
 import { showNotification } from '@mantine/notifications';
 
 export const loginMachine = 

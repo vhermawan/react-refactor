@@ -1,5 +1,6 @@
-import HomePage from '../../features/login/Login';
-import Dashboard from '../../features/dashboard/Dashboard';
+import HomePage from '@features/login/Login';
+import Dashboard from '@features/dashboard/Dashboard';
+import User from '@features/user/User';
 import { createBrowserRouter } from "react-router-dom";
 
 const routerList = createBrowserRouter([
@@ -10,6 +11,10 @@ const routerList = createBrowserRouter([
   {
     path: "dashboard",
     element: <Dashboard />,
+  },
+  {
+    path: "user",
+    element: <User />,
   },
 ]);
 

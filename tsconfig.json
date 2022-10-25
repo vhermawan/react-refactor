@@ -19,10 +19,12 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
+    "baseUrl": "./src",
     "paths": {
-      "@common": ["./src/common/*"],
-      "@features": ["./src/features/*"],
-      "@pages": ["./src/pages/*"],
+      "@common/*": ["common/*"],
+      "@features/*": ["features/*"],
+      "@pages/*": ["pages/*"],
+      "@components/*": ["components/*"],
     }
   },
   "include": [
