@@ -4,6 +4,7 @@ import { MantineProvider } from '@mantine/core';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import Routers from './common/router/router';
+import { NotificationsProvider } from '@mantine/notifications';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,7 +12,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
      <MantineProvider withGlobalStyles withNormalizeCSS>
-        <Routers/>
+      <NotificationsProvider position="top-right" zIndex={2077}>
+          <Routers/>
+      </NotificationsProvider>
      </MantineProvider>
   </React.StrictMode>
 );
