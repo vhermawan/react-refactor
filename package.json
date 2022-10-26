@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@amcharts/amcharts5": "^5.2.31",
     "@emotion/react": "^11.10.4",
     "@mantine/carousel": "^5.6.1",
     "@mantine/core": "^5.6.1",
@@ -29,6 +30,8 @@
     "dayjs": "^1.11.6",
     "embla-carousel-react": "^7.0.3",
     "js-cookie": "^3.0.1",
+    "local-cors-proxy": "^1.1.0",
+    "mantine-datatable": "^1.7.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",

@@ -16,10 +16,10 @@ interface ILayout {
 
 const Layout: React.FC<ILayout> = ({children}) => {
 
-  const token = localStorage.getItem("token")
-  if (!token) {
-    return <Navigate to="/" replace />;
-  }
+  // const token = localStorage.getItem("token")
+  // if (!token) {
+  //   return <Navigate to="/" replace />;
+  // }
 
   return (
     <AppShell
@@ -47,7 +47,6 @@ const Layout: React.FC<ILayout> = ({children}) => {
         main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0] },
       })}
   >
-    {/* <Text>Resize app to see responsive navbar in action</Text> */}
     {children}
   </AppShell>
   );
